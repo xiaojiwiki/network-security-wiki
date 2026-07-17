@@ -41,7 +41,7 @@ const defaultData = [
         question: "MYSQL 启动不了怎么办？",
         answer: "优先打开 MYSQL 日志查看是否有相关提示，其次检查内存是否足够 MYSQL 程序运行。",
         category: "technical"
-    }
+    },
 ];
 
 // 状态管理
