@@ -300,3 +300,4 @@ function showToast(message) {
         toastEl.classList.add('translate-y-20', 'opacity-0');
     }, 3000);
 }
+}
