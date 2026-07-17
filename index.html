@@ -1,0 +1,183 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能帮助中心 - FAQ</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 自定义动画 */
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, opacity 0.3s ease-out, padding 0.3s ease;
+            opacity: 0;
+        }
+        .faq-item.active .faq-answer {
+            max-height: 500px; /* 足够大的高度以容纳内容 */
+            opacity: 1;
+            padding-top: 1rem;
+        }
+        .faq-icon {
+            transition: transform 0.3s ease;
+        }
+        .faq-item.active .faq-icon {
+            transform: rotate(180deg);
+        }
+        /* 隐藏滚动条但保留功能 */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans antialiased">
+
+    <!-- 头部导航 -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center gap-3">
+                    <div class="bg-indigo-600 text-white p-2 rounded-lg">
+                        <i class="fa-solid fa-life-ring text-xl"></i>
+                    </div>
+                    <h1 class="text-xl font-bold text-gray-900 tracking-tight">HelpCenter</h1>
+                </div>
+                <div class="flex items-center gap-4">
+                    <button id="adminToggleBtn" class="text-sm text-indigo-600 hover:text-indigo-800 font-medium transition-colors">
+                        <i class="fa-solid fa-lock mr-1"></i> 管理入口
+                    </button>
+                    <a href="#" class="hidden sm:block text-gray-500 hover:text-gray-900 transition-colors">返回首页</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero 搜索区域 -->
+    <section class="bg-gradient-to-b from-indigo-50 to-gray-50 py-16 sm:py-24">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-4">
+                有什么可以帮您？
+            </h2>
+            <p class="text-lg text-gray-600 mb-8">
+                搜索常见问题或浏览下方分类以获取即时帮助。
+            </p>
+            
+            <div class="relative max-w-2xl mx-auto">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <i class="fa-solid fa-magnifying-glass text-gray-400"></i>
+                </div>
+                <input type="text" id="searchInput" 
+                    class="block w-full pl-12 pr-4 py-4 bg-white border border-gray-200 rounded-2xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent shadow-lg transition-all" 
+                    placeholder="输入关键词，例如：退款、密码重置...">
+            </div>
+        </div>
+    </section>
+
+    <!-- 主要内容区 -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        
+        <!-- 分类标签 -->
+        <div class="flex flex-wrap justify-center gap-3 mb-12" id="categoryContainer">
+            <button class="category-btn active px-5 py-2 rounded-full bg-indigo-600 text-white font-medium shadow-md transition-all hover:shadow-lg" data-category="all">
+                全部
+            </button>
+            <button class="category-btn px-5 py-2 rounded-full bg-white text-gray-600 border border-gray-200 font-medium hover:bg-gray-50 transition-all" data-category="account">
+                账户与安全
+            </button>
+            <button class="category-btn px-5 py-2 rounded-full bg-white text-gray-600 border border-gray-200 font-medium hover:bg-gray-50 transition-all" data-category="billing">
+                账单与支付
+            </button>
+            <button class="category-btn px-5 py-2 rounded-full bg-white text-gray-600 border border-gray-200 font-medium hover:bg-gray-50 transition-all" data-category="technical">
+                技术支持
+            </button>
+        </div>
+
+        <!-- FAQ 列表容器 -->
+        <div id="faqList" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- FAQ 项将通过 JS 动态插入 -->
+        </div>
+
+        <!-- 空状态提示 -->
+        <div id="emptyState" class="hidden text-center py-12">
+            <div class="inline-block p-4 rounded-full bg-gray-100 mb-4">
+                <i class="fa-regular fa-face-frown text-4xl text-gray-400"></i>
+            </div>
+            <h3 class="text-lg font-medium text-gray-900">未找到相关问题</h3>
+            <p class="text-gray-500 mt-1">尝试更换关键词或联系人工客服。</p>
+        </div>
+
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="bg-white border-t border-gray-200 mt-12">
+        <div class="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p class="text-gray-500 text-sm">&copy; 2026 HelpCenter. All rights reserved.</p>
+            <div class="flex space-x-6">
+                <a href="#" class="text-gray-400 hover:text-gray-500"><i class="fa-brands fa-twitter text-xl"></i></a>
+                <a href="#" class="text-gray-400 hover:text-gray-500"><i class="fa-brands fa-github text-xl"></i></a>
+                <a href="#" class="text-gray-400 hover:text-gray-500"><i class="fa-solid fa-envelope text-xl"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 管理员模态框 (添加/编辑) -->
+    <div id="adminModal" class="fixed inset-0 z- hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity backdrop-blur-sm" id="modalBackdrop"></div>
+        <div class="fixed inset-0 z-10 overflow-y-auto">
+            <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+                <div class="relative transform overflow-hidden rounded-2xl bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+                    <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                        <div class="sm:flex sm:items-start">
+                            <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-indigo-100 sm:mx-0 sm:h-10 sm:w-10">
+                                <i class="fa-solid fa-pen-to-square text-indigo-600"></i>
+                            </div>
+                            <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left w-full">
+                                <h3 class="text-base font-semibold leading-6 text-gray-900" id="modalTitle">添加新问题</h3>
+                                <div class="mt-4 space-y-4">
+                                    <input type="hidden" id="editId">
+                                    <div>
+                                        <label for="questionInput" class="block text-sm font-medium text-gray-700">问题标题</label>
+                                        <input type="text" id="questionInput" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border p-2" placeholder="输入问题...">
+                                    </div>
+                                    <div>
+                                        <label for="answerInput" class="block text-sm font-medium text-gray-700">答案内容</label>
+                                        <textarea id="answerInput" rows="4" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border p-2" placeholder="输入详细解答..."></textarea>
+                                    </div>
+                                    <div>
+                                        <label for="categoryInput" class="block text-sm font-medium text-gray-700">分类</label>
+                                        <select id="categoryInput" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border p-2">
+                                            <option value="account">账户与安全</option>
+                                            <option value="billing">账单与支付</option>
+                                            <option value="technical">技术支持</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                        <button type="button" id="saveBtn" class="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 sm:ml-3 sm:w-auto">保存</button>
+                        <button type="button" id="cancelBtn" class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">取消</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast 通知 -->
+    <div id="toast" class="fixed bottom-5 right-5 transform translate-y-20 opacity-0 transition-all duration-300 z- bg-gray-800 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-3">
+        <i class="fa-solid fa-check-circle text-green-400"></i>
+        <span id="toastMessage">操作成功</span>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
