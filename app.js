@@ -35,7 +35,7 @@ const defaultData = [
         question: "API 接口有调用限制吗？",
         answer: "是的，基础版用户每分钟限制 60 次请求，专业版用户限制为 1000 次。如需更高额度，请联系企业销售团队。",
         category: "technical"
-    }
+    },
     {
         id: 7,
         question: "MYSQL 启动不了怎么办？",
