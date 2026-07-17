@@ -37,6 +37,12 @@ const defaultData = [
         answer: "是的，基础版用户每分钟限制 60 次请求，专业版用户限制为 1000 次。如需更高额度，请联系企业销售团队。",
         category: "technical"
     }
+    {
+        id: 7,
+        question: "MYSQL 启动不了怎么办？",
+        answer: "优先打开 MYSQL 日志查看是否有相关提示，其次检查内存是否足够 MYSQL 程序运行。",
+        category: "technical"
+    }
 ];
 
 // 状态管理
